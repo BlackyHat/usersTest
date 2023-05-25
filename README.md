@@ -6,11 +6,11 @@ For styles used Bootstrap.
 
 ## Demo
 
-[LINK](https://blackyhat.github.io/followersGoIT)
-[https://goitacademy.github.io/react-homework-template]
+[LINK](https://users-1bii.onrender.com/)
+[https://users-1bii.onrender.com/]
 
-![Form Component]('assets/1.png)
-![Filter Component]('assets/2.png)
+![Form Component](assets/1.png)
+![Filter Component](assets/2.png)
 ![Pagination Component](assets/3.png)
 
 ## Features
