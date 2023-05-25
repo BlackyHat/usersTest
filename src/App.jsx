@@ -1,14 +1,15 @@
-import './App.css';
-import UserList from './components/UserList';
-import UserForm from './components/UserForm';
-import CustomPagination from './components/CustomPagination';
 import { useEffect, useState } from 'react';
-import { getAllUsers } from './utils/getUsers';
-import FilterInput from './components/FilterInput';
-import { filterUsers } from './utils/filterUsers';
-import { MdGroupAdd } from 'react-icons/md';
+
 import { useToggle } from './hooks/useToggle';
+import { getAllUsers } from './utils/getAllUsers';
+import { filterUsers } from './utils/filterUsers';
+
+import UserForm from './components/UserForm';
+import FilterInput from './components/FilterInput';
+import UserList from './components/UserList';
+import CustomPagination from './components/CustomPagination';
 import PureModal from './components/PureModal';
+import { MdGroupAdd } from 'react-icons/md';
 
 function App() {
   const [page, setPage] = useState(1);
@@ -16,16 +17,20 @@ function App() {
   const [filter, setFilter] = useState('');
   const { isOpen, onOpen, onClose } = useToggle();
 
-  useEffect(() => {
-    const getUsersData = async () => {
-      try {
-        const usersData = await getAllUsers();
-        setUsers(usersData);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
+  const handleUpdateUser = () => {
+    getUsersData();
+  };
 
+  const getUsersData = async () => {
+    try {
+      const usersData = await getAllUsers();
+      setUsers(usersData);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
     getUsersData();
   }, []);
 
@@ -42,9 +47,17 @@ function App() {
 
   return (
     <div className="container-fluid text-end">
-      <MdGroupAdd className="m-2" size={32} onClick={onOpen} />
+      <MdGroupAdd
+        className="m-2"
+        style={{
+          color: '#41526b',
+          cursor: 'pointer',
+        }}
+        size={32}
+        onClick={onOpen}
+      />
       <FilterInput filter={filter} handlerFilter={handlerFilter} />
-      <UserList users={filteredUsers} />
+      <UserList users={filteredUsers} onEditUser={handleUpdateUser} />
       <CustomPagination
         current={page}
         totalPages={totalPages}
@@ -52,7 +65,11 @@ function App() {
       />
       {isOpen && (
         <PureModal title="Add new User" show={isOpen} handleClose={onClose}>
-          <UserForm onClose={onClose} />
+          <UserForm
+            onClose={onClose}
+            onAddUser={handleUpdateUser}
+            label="Add User"
+          />
         </PureModal>
       )}
     </div>

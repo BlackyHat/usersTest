@@ -1,7 +1,7 @@
 import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '../services/firebase.config';
 
-export const updateDataToFirestore = async ({ id, ...newUserData }) => {
+export const updateUser = async ({ id, ...newUserData }) => {
   try {
     const ref = doc(db, 'users', id);
     await updateDoc(ref, { ...newUserData });

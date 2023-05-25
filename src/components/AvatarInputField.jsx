@@ -1,38 +1,20 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import userAvatar from '../images/user_picture.png';
 import { MdOutlineAddCircle } from 'react-icons/md';
 
-const AvatarInputField = ({ addAvatar, ...props }) => {
-  const [previewImageUrl, setPreviewImageUrl] = useState(null);
-
-  const handleAvatarChange = (e) => {
-    const userAvatarPreviewImg = e.target.files[0];
-
-    if (userAvatarPreviewImg.size > 2097152) {
-      alert('File is too big!');
-      return;
-    }
-
-    addAvatar(userAvatarPreviewImg);
-
-    const reader = new FileReader();
-    const blob = new Blob([userAvatarPreviewImg], {
-      type: userAvatarPreviewImg.type,
-    });
-    reader.readAsDataURL(blob);
-    reader.onload = () => {
-      setPreviewImageUrl(reader.result);
-    };
-  };
-
+const AvatarInputField = ({
+  previewImageUrl,
+  handleAvatarChange,
+  ...props
+}) => {
   return (
     <div className="input-group mb-3 flex-column position-relative align-items-center">
       <img
         src={previewImageUrl || userAvatar}
         alt="User Avatar"
-        className="rounded-circle"
+        className="rounded-circle object-fit-cover"
         width={160}
         height={160}
       />
@@ -63,7 +45,8 @@ const AvatarInputField = ({ addAvatar, ...props }) => {
 export default AvatarInputField;
 
 AvatarInputField.propTypes = {
-  addAvatar: PropTypes.func.isRequired,
+  handleAvatarChange: PropTypes.func.isRequired,
+  previewImageUrl: PropTypes.string,
   id: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,

@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import userAvatar from '../images/user_picture.png';
-import { MdOutlineAddCircle } from 'react-icons/md';
+import { FaUserEdit } from 'react-icons/fa';
 import { useToggle } from '../hooks/useToggle';
 import PureModal from './PureModal';
 import UserForm from './UserForm';
 
-const UserCard = ({ data }) => {
+const UserCard = ({ data, onEditUser }) => {
   const { avatar, firstName, lastName, email, phone, birthday } = data;
   const { isOpen, onOpen, onClose } = useToggle();
   return (
@@ -26,10 +26,10 @@ const UserCard = ({ data }) => {
               <p className="card-text">Phone: {phone}</p>
               <p className="card-text">Birthday: {birthday}</p>
             </div>
-            <MdOutlineAddCircle
-              className=" position-absolute top-0 end-0 rounded-circle"
+            <FaUserEdit
+              className=" position-absolute top-0 end-0"
               style={{
-                color: '#0d6efd',
+                color: '#41526b',
                 cursor: 'pointer',
               }}
               size={32}
@@ -37,12 +37,17 @@ const UserCard = ({ data }) => {
             />
           </div>
         </div>
-        {isOpen && (
-          <PureModal title="Edit User Info" show={isOpen} handleClose={onClose}>
-            <UserForm data={data} onClose={onClose} />
-          </PureModal>
-        )}
       </li>
+      {isOpen && (
+        <PureModal title="Edit User Info" show={isOpen} handleClose={onClose}>
+          <UserForm
+            data={data}
+            onClose={onClose}
+            onEditUser={onEditUser}
+            label="Edit"
+          />
+        </PureModal>
+      )}
     </>
   );
 };
@@ -60,4 +65,5 @@ UserCard.propTypes = {
     phone: PropTypes.string,
     birthday: PropTypes.string,
   }),
+  onEditUser: PropTypes.func,
 };

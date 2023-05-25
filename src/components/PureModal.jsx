@@ -16,7 +16,7 @@ export default PureModal;
 
 PureModal.propTypes = {
   title: PropTypes.string,
-  show: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),

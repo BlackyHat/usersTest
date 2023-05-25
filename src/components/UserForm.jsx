@@ -1,13 +1,15 @@
+import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import { formSchema } from '../validation/formSchema';
+import PropTypes from 'prop-types';
+
+import { addUser } from '../utils/addUser';
+import { uploadAvatar } from '../utils/uploadAvatar';
+import { updateUser } from '../utils/updateUser';
+
 import FormField from './FormField';
 import PhoneInputField from './PhoneInputField';
 import AvatarInputField from './AvatarInputField';
-import { useState } from 'react';
-import { writeDataToFirestore } from '../utils/addUser';
-import { uploadAvatar } from '../utils/uploadAvatar';
-import { updateDataToFirestore } from '../utils/updateUser';
-import PropTypes from 'prop-types';
 
 const initialValues = {
   firstName: '',
@@ -17,8 +19,29 @@ const initialValues = {
   birthday: '',
 };
 
-const UserForm = ({ data, onClose }) => {
+const UserForm = ({ data, onClose, onAddUser, onEditUser, label }) => {
   const [file, setFile] = useState(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState(data?.avatar || null);
+
+  const handleAvatarChange = (e) => {
+    const userAvatarPreviewImg = e.target.files[0];
+
+    if (userAvatarPreviewImg.size > 2097152) {
+      alert('File is too big!');
+      return;
+    }
+
+    setFile(userAvatarPreviewImg);
+
+    const reader = new FileReader();
+    const blob = new Blob([userAvatarPreviewImg], {
+      type: userAvatarPreviewImg.type,
+    });
+    reader.readAsDataURL(blob);
+    reader.onload = () => {
+      setPreviewImageUrl(reader.result);
+    };
+  };
 
   const handleSubmiting = async (values, actions) => {
     try {
@@ -27,14 +50,17 @@ const UserForm = ({ data, onClose }) => {
         values.avatar = avatarURL || '';
       }
       if (!data) {
-        await writeDataToFirestore(values);
+        await addUser(values);
       } else {
-        await updateDataToFirestore(values);
+        await updateUser(values);
       }
     } catch (error) {
       console.log(error);
     }
     actions.setSubmitting(false);
+    setPreviewImageUrl(null);
+    onAddUser && onAddUser();
+    onEditUser && onEditUser();
     actions.resetForm();
     onClose && onClose();
   };
@@ -56,7 +82,8 @@ const UserForm = ({ data, onClose }) => {
                 id="avatar"
                 type="file"
                 accept="image/*"
-                addAvatar={setFile}
+                previewImageUrl={previewImageUrl}
+                handleAvatarChange={handleAvatarChange}
               />
               <FormField name="firstName" type="text" label="First Name" />
               <FormField name="lastName" type="text" label="Last Name" />
@@ -69,7 +96,7 @@ const UserForm = ({ data, onClose }) => {
                 maxLength="16"
               />
               <button type="submit" className="btn btn-primary mb-3">
-                Submit
+                {label || 'Submit'}
               </button>
             </Form>
           );
@@ -92,4 +119,7 @@ UserForm.propTypes = {
     birthday: PropTypes.string,
   }),
   onClose: PropTypes.func,
+  onAddUser: PropTypes.func,
+  onEditUser: PropTypes.func,
+  label: PropTypes.string,
 };

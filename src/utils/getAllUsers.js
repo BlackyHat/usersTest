@@ -8,7 +8,6 @@ export const getAllUsers = async () => {
       ...doc.data(),
       id: doc.id,
     }));
-
     return usersData;
   } catch (error) {
     console.log(error.message);

@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
 import UserCard from './UserCard';
 
-const UserList = ({ users }) => {
+const UserList = ({ users, onEditUser }) => {
   return (
     <section>
       <ul className="container text-center">
         {users &&
           users.map((user) => {
-            return <UserCard key={user.id} data={user} />;
+            return (
+              <UserCard key={user.id} data={user} onEditUser={onEditUser} />
+            );
           })}
       </ul>
     </section>
@@ -28,4 +30,5 @@ UserList.propTypes = {
       birthday: PropTypes.string,
     })
   ),
+  onEditUser: PropTypes.func,
 };
