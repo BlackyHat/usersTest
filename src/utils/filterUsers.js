@@ -3,8 +3,8 @@ import { LIST_LIMIT } from '../constants/paginationParams';
 export const filterUsers = (users, currentPage, filter) => {
   const filtedUsers = users.filter((user) => {
     const normalizedFilter = filter.toLowerCase();
-    const newUser = JSON.stringify(user);
-    return newUser.toLowerCase().includes(normalizedFilter);
+    const userInfo = JSON.stringify(Object.values(user));
+    return userInfo.toLowerCase().includes(normalizedFilter);
   });
 
   const startAt = (currentPage - 1) * LIST_LIMIT;

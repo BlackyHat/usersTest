@@ -46,18 +46,24 @@ function App() {
   const [totalPages, filteredUsers] = filterUsers(users, page, filter);
 
   return (
-    <div className="container-fluid text-end">
-      <MdGroupAdd
-        className="m-2"
-        style={{
-          color: '#41526b',
-          cursor: 'pointer',
-        }}
-        size={32}
-        onClick={onOpen}
-      />
+    <div className="container-fluid text-center" style={{ maxWidth: '960px' }}>
+      <div className="text-end">
+        <MdGroupAdd
+          className="m-2"
+          style={{
+            color: '#41526b',
+            cursor: 'pointer',
+          }}
+          size={32}
+          onClick={onOpen}
+        />
+      </div>
       <FilterInput filter={filter} handlerFilter={handlerFilter} />
-      <UserList users={filteredUsers} onEditUser={handleUpdateUser} />
+      {filteredUsers.length > 0 ? (
+        <UserList users={filteredUsers} onEditUser={handleUpdateUser} />
+      ) : (
+        <h2>Тo users were found ...</h2>
+      )}
       <CustomPagination
         current={page}
         totalPages={totalPages}
