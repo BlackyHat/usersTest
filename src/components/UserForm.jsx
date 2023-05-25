@@ -6,6 +6,8 @@ import AvatarInputField from './AvatarInputField';
 import { useState } from 'react';
 import { writeDataToFirestore } from '../utils/addUser';
 import { uploadAvatar } from '../utils/uploadAvatar';
+import { updateDataToFirestore } from '../utils/updateUser';
+import PropTypes from 'prop-types';
 
 const initialValues = {
   firstName: '',
@@ -15,7 +17,7 @@ const initialValues = {
   birthday: '',
 };
 
-const UserForm = () => {
+const UserForm = ({ data, onClose }) => {
   const [file, setFile] = useState(null);
 
   const handleSubmiting = async (values, actions) => {
@@ -24,19 +26,25 @@ const UserForm = () => {
         const avatarURL = await uploadAvatar(file);
         values.avatar = avatarURL || '';
       }
-
-      await writeDataToFirestore(values);
+      if (!data) {
+        await writeDataToFirestore(values);
+      } else {
+        await updateDataToFirestore(values);
+      }
     } catch (error) {
       console.log(error);
     }
     actions.setSubmitting(false);
     actions.resetForm();
+    onClose && onClose();
   };
+
+  const initForm = { ...initialValues, ...data };
 
   return (
     <section>
       <Formik
-        initialValues={initialValues}
+        initialValues={initForm}
         validationSchema={formSchema}
         onSubmit={handleSubmiting}
       >
@@ -72,3 +80,16 @@ const UserForm = () => {
 };
 
 export default UserForm;
+
+UserForm.propTypes = {
+  data: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    avatar: PropTypes.string,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    email: PropTypes.string,
+    phone: PropTypes.string,
+    birthday: PropTypes.string,
+  }),
+  onClose: PropTypes.func,
+};

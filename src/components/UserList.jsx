@@ -6,8 +6,8 @@ const UserList = ({ users }) => {
     <section>
       <ul className="container text-center">
         {users &&
-          users.map((user, idx) => {
-            return <UserCard key={idx} data={user} />;
+          users.map((user) => {
+            return <UserCard key={user.id} data={user} />;
           })}
       </ul>
     </section>
@@ -19,6 +19,7 @@ export default UserList;
 UserList.propTypes = {
   users: PropTypes.arrayOf(
     PropTypes.shape({
+      id: PropTypes.string.isRequired,
       avatar: PropTypes.string,
       firstName: PropTypes.string.isRequired,
       lastName: PropTypes.string.isRequired,

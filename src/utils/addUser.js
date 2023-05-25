@@ -5,8 +5,7 @@ export const writeDataToFirestore = async (userData) => {
   try {
     const timestamp = serverTimestamp();
     const dataWithTimestamp = { ...userData, createdAt: timestamp };
-    const docRef = await addDoc(collection(db, 'users'), dataWithTimestamp);
-    console.log('Document written with ID: ', docRef.id);
+  await addDoc(collection(db, 'users'), dataWithTimestamp);
   } catch (e) {
     console.error('Error adding document: ', e);
     throw e;

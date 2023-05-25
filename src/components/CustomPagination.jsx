@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 
 const CustomPagination = ({ current, totalPages, onPageChange }) => {
   const [period, setPeriod] = useState([]);
-  console.log(current, totalPages);
   const createPaginationPeriod = (current, totalPages) => {
     const period = [];
     const start = current - 2 >= 1 ? current - 2 : 1;

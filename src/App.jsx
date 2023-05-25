@@ -7,12 +7,14 @@ import { getAllUsers } from './utils/getUsers';
 import FilterInput from './components/FilterInput';
 import { filterUsers } from './utils/filterUsers';
 import { MdGroupAdd } from 'react-icons/md';
+import { useToggle } from './hooks/useToggle';
+import PureModal from './components/PureModal';
 
 function App() {
   const [page, setPage] = useState(1);
-  const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState('');
+  const { isOpen, onOpen, onClose } = useToggle();
 
   useEffect(() => {
     const getUsersData = async () => {
@@ -36,17 +38,11 @@ function App() {
     setFilter(query);
   };
 
-  const onToggleForm = () => {
-    setOpen(!open);
-  };
-
   const [totalPages, filteredUsers] = filterUsers(users, page, filter);
 
   return (
     <div className="container-fluid text-end">
-      <MdGroupAdd className="m-2" size={32} onClick={onToggleForm} />
-
-      {open && <UserForm />}
+      <MdGroupAdd className="m-2" size={32} onClick={onOpen} />
       <FilterInput filter={filter} handlerFilter={handlerFilter} />
       <UserList users={filteredUsers} />
       <CustomPagination
@@ -54,6 +50,11 @@ function App() {
         totalPages={totalPages}
         onPageChange={handlerPageChange}
       />
+      {isOpen && (
+        <PureModal title="Add new User" show={isOpen} handleClose={onClose}>
+          <UserForm onClose={onClose} />
+        </PureModal>
+      )}
     </div>
   );
 }

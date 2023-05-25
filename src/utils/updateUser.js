@@ -1,17 +1,12 @@
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from './config';
+import { updateDoc, doc } from 'firebase/firestore';
+import { db } from '../services/firebase.config';
 
-export const updateDataInFirestore = async (
-  collectionName,
-  docId,
-  newUserData
-) => {
+export const updateDataToFirestore = async ({ id, ...newUserData }) => {
   try {
-    const ref = doc(db, collectionName, docId);
-
-    await updateDoc(ref, newUserData);
-    console.log('document updated');
-  } catch (error) {
-    console.log(error);
+    const ref = doc(db, 'users', id);
+    await updateDoc(ref, { ...newUserData });
+  } catch (e) {
+    console.error('Error adding document: ', e);
+    throw e;
   }
 };
